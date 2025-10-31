@@ -5,19 +5,24 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "fetch-swagger": "node ./scripts/fetch-swagger.js",
+    "generate-api": "openapi --input ./swagger.json --output ./api-client --client axios"
   },
   "dependencies": {
+    "next": "15.5.2",
+    "next-auth": "^4.24.11",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.2"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@openapitools/openapi-generator-cli": "^2.23.4",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4"
+    "openapi-typescript-codegen": "^0.29.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
