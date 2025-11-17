@@ -8,5 +8,6 @@ export type MovieItem = {
     director: string;
     year?: number;
     description?: string | null;
+    rating?: number | null;
 };
 

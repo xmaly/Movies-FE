@@ -8,6 +8,7 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { CreateMovieDto } from './models/CreateMovieDto';
+export type { GoogleOAuthLoginDto } from './models/GoogleOAuthLoginDto';
 export type { LoginDto } from './models/LoginDto';
 export type { LoginResponseDto } from './models/LoginResponseDto';
 export type { MovieItem } from './models/MovieItem';

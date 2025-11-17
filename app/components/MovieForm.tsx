@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { MovieItem } from "@/api-client";
 import { MovieService } from "@/api-client";
+import { StarRating } from "./StarRating";
 
 type MovieFormProps = {
   movie?: MovieItem;
@@ -15,6 +16,7 @@ export function MovieForm({ movie, onSubmit, onCancel }: MovieFormProps) {
   const [director, setDirector] = useState(movie?.director || "");
   const [year, setYear] = useState(movie?.year?.toString() || "");
   const [description, setDescription] = useState(movie?.description || "");
+  const [rating, setRating] = useState((movie as any)?.rating || 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,24 +31,26 @@ export function MovieForm({ movie, onSubmit, onCancel }: MovieFormProps) {
         director,
         year: year ? parseInt(year) : undefined,
         description,
+        rating: rating > 0 ? rating : undefined,
       };
 
       let result;
       if (movie?.id) {
-        // Update existing movie
         await MovieService.putApiMovie(movie.id, payload);
         result = { ...movie, ...payload };
       } else {
-        // Create new movie
         result = await MovieService.postApiMovie(payload);
-        onSubmit(result);
       }
+
+      onSubmit(result);
 
       setTitle("");
       setDirector("");
       setYear("");
       setDescription("");
-      onCancel(); // Close the form after successful submission
+      setRating(0);
+      onCancel();
+      
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to save movie";
       setError(message);
@@ -108,6 +112,11 @@ export function MovieForm({ movie, onSubmit, onCancel }: MovieFormProps) {
             rows={4}
             className="w-full px-4 py-2 bg-[#151a16] border border-[#8fcf3c]/40 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8fcf3c]/40"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-2">Rating</label>
+          <StarRating value={rating} onChange={setRating} maxStars={10} />
         </div>
 
         <div className="flex gap-3">

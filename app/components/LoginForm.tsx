@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AuthService } from "@/api-client";
@@ -79,9 +79,21 @@ function GoogleButton({ disabled, isLoading, onClick }: GoogleButtonProps) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg bg-[#dff7be] px-4 py-2 text-[#151a16] font-semibold hover:bg-[#a6ff4d] transition disabled:opacity-60"
+      className="w-full cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-[#111827] font-semibold hover:bg-gray-100 transition disabled:opacity-60"
     >
-      {isLoading ? "Signing in…" : "Continue with Google"}
+      {isLoading ? (
+        "Signing in…"
+      ) : (
+        <>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="18" height="18" className="inline-block">
+            <path fill="#fbbc05" d="M43.6 20.5H42V20H24v8h11.3C34.9 31.5 30.1 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8.1 2.9l5.7-5.7C33.9 5.5 29.2 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-9 20-20 0-1.3-.1-2.5-.4-3.5z"/>
+            <path fill="#ea4335" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.9 1.1 8.1 2.9l5.7-5.7C33.9 5.5 29.2 4 24 4 16.6 4 10.1 8.6 6.3 14.7z"/>
+            <path fill="#34a853" d="M24 44c5.1 0 9.8-1.7 13.5-4.6l-6.2-5c-2 1.4-4.5 2.3-7.3 2.3-6.1 0-10.9-3.5-13-8.6l-6.6 5C7.9 38.9 15.5 44 24 44z"/>
+            <path fill="#4285f4" d="M43.6 20.5H42V20H24v8h11.3c-1.2 3.1-3.6 5.6-6.7 6.9l.1.1 6.2 5C39.7 38 48 31 48 24c0-1.3-.1-2.5-.4-3.5z"/>
+          </svg>
+          <span className="ml-2">Continue with Google</span>
+        </>
+      )}
     </button>
   );
 }
@@ -153,7 +165,26 @@ export function LoginForm({ callbackUrl = "/movies" }: LoginFormProps) {
 
   const handleGoogleClick = () => {
     setIsLoading(true);
-    signIn("google", { callbackUrl });
+    // Check configured providers first; if Google isn't configured on the server
+    // provide a clear error message instead of doing nothing.
+    (async () => {
+      try {
+        const providers = await getProviders();
+        if (providers && providers["google"]) {
+          await signIn("google", { callbackUrl });
+        } else {
+          setError(
+            "Google SSO is not configured on the server. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to .env.local and restart the dev server."
+          );
+          setIsLoading(false);
+          console.warn("Available providers:", providers);
+        }
+      } catch (e) {
+        setError("Failed to start Google sign-in");
+        setIsLoading(false);
+        console.error(e);
+      }
+    })();
   };
 
   return (

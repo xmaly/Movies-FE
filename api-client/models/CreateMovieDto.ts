@@ -7,5 +7,6 @@ export type CreateMovieDto = {
     director: string;
     year?: number;
     description?: string | null;
+    rating?: number | null;
 };
 

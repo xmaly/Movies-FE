@@ -45,7 +45,13 @@ export default function MoviesPage() {
   }, [status, router]);
 
   const handleAddMovie = async (movie: MovieItem) => {
-    setMovies([...movies, movie]);
+    if (editingMovie) {
+      // Update existing movie in the table
+      setMovies(movies.map((m) => (m.id === movie.id ? movie : m)));
+    } else {
+      // Add new movie to the table
+      setMovies([...movies, movie]);
+    }
     setShowForm(false);
   };
 

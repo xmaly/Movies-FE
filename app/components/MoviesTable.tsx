@@ -36,6 +36,7 @@ export function MoviesTable({ movies, onEdit, onDelete, isLoading }: MoviesTable
             <th className="px-6 py-3 text-left text-sm font-semibold text-[#8fcf3c]">Title</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-[#8fcf3c]">Director</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-[#8fcf3c]">Year</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-[#8fcf3c]">Rating</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-[#8fcf3c]">Description</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-[#8fcf3c]">Actions</th>
           </tr>
@@ -49,6 +50,9 @@ export function MoviesTable({ movies, onEdit, onDelete, isLoading }: MoviesTable
               <td className="px-6 py-4 text-white font-medium">{movie.title}</td>
               <td className="px-6 py-4 text-gray-300">{movie.director}</td>
               <td className="px-6 py-4 text-gray-300">{movie.year || "N/A"}</td>
+              <td className="px-6 py-4 text-gray-300">
+                {(movie as any).rating ? `${(movie as any).rating}/10` : "—"}
+              </td>
               <td className="px-6 py-4 text-gray-300 max-w-xs truncate">
                 {movie.description || "N/A"}
               </td>

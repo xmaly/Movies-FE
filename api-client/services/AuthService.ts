@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { GoogleOAuthLoginDto } from '../models/GoogleOAuthLoginDto';
 import type { LoginDto } from '../models/LoginDto';
 import type { LoginResponseDto } from '../models/LoginResponseDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -19,6 +20,21 @@ export class AuthService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/Auth/login',
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param requestBody
+     * @returns LoginResponseDto OK
+     * @throws ApiError
+     */
+    public static postApiAuthGoogle(
+        requestBody: GoogleOAuthLoginDto,
+    ): CancelablePromise<LoginResponseDto> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/Auth/google',
             body: requestBody,
             mediaType: 'application/json',
         });
